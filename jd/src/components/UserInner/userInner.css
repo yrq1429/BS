@@ -1,0 +1,64 @@
+.user {
+  width: 190px;
+  height: 148px;
+}
+.user-avatar {
+  position: absolute;
+  left: 50%;
+  top: -10px;
+  margin-left: -34px;
+  width: 65px;
+  height: 65px;
+}
+.user-avatar img{
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+}
+.user-show {
+  width: 190px;
+  height: 40px;
+  position: absolute;
+  top: 55px;
+}
+.user-show {
+  color: #888;
+  font-size: 12px;
+  text-align: center;
+}
+.user-show p {
+  margin-bottom: 5px;
+}
+.user-profit {
+  position: absolute;
+  width: 190px;
+  height: 40px;
+  top: 100px;
+  margin-top: 10px;
+  text-align: center;
+}
+.user-button1 {
+  display: inline-block;
+  margin: 0 5px;
+  width: 70px;
+  height: 25px;
+  line-height: 25px;
+  font-size: 12px;
+  text-align: center;
+  color: #e43f3b;
+  border-radius: 13px;
+  box-shadow: 6px 8px 20px rgba(45,45,45,.15);
+}
+.user-button2 {
+  display: inline-block;
+  margin: 0 5px;
+  width: 70px;
+  height: 25px;
+  line-height: 25px;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 13px;
+  box-shadow: 6px 8px 20px rgba(45,45,45,.15);
+  background: #363634;
+  color: #e5d790;
+}
