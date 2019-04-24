@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 import { Layout, message, Breadcrumb } from "antd";
+import { Form, Input, Button, Icon, Checkbox } from "antd";
+
 import './index.scss'
 import Header from "../../a_component/Header";
 import Menu from "../../a_component/Menu";
@@ -24,7 +26,9 @@ import Loadable from "react-loadable";
 //   });
 // });
 const { Content } = Layout;
-class Home extends Component {
+const FormItem = Form.Item;
+
+class ChangePassword extends Component {
   constructor (props) {
     super (props);
     this.state = {
@@ -76,22 +80,12 @@ class Home extends Component {
           icon: "coffee",
           url: "/awardsetting",
           parent: 2,
-          desc: "系统管理/权限管理",
+          desc: "奖学金设定",
           sorts: 2,
           conditions: 1
         },
         {
           id: 6,
-          title: "奖学金结果",
-          icon: "coffee",
-          url: "/awardfinally",
-          parent: 2,
-          desc: "奖学金结果",
-          sorts: 2,
-          conditions: 1
-        },
-        {
-          id: 7,
           title: "修改密码",
           icon: "appstore",
           url: "/changepassword",
@@ -106,7 +100,17 @@ class Home extends Component {
     }
   }
 
+  onSubmit() {
+    const form = this.props.form;
+    form.validateFields((error, values) => {
+      if (error) {
+        return;
+      }
+    });
+  }
+
   render() {
+    const { getFieldDecorator } = this.props.form;    
     return (
       <Layout className="page-basic">
         <Menu
@@ -127,17 +131,71 @@ class Home extends Component {
             <div className="page-home">
               <div className="box">
                 <div className="title">
-                  学校概况
+                  修改密码
                 </div>
-                <div className="info">
-                  &nbsp;&nbsp;&nbsp;&nbsp;学生评奖评优管理系统是为了适应新形式下学生奖学金评定工作而准备开发的一套管理系统。要求能够实现学生德智体综合信息库的自动导入,按照公式自动进行德智体综合排名,根据比例要求自动生成获得奖学金学生信息、能够查询、修改各种信息,对排名、获奖学金信息进行统计,生成报表,基本满足学生工作人员的需要。
-                </div>
-                <div className="info">
-                  &nbsp;&nbsp;&nbsp;&nbsp;本系统是根据具体情况和要求而开发的一套完善的学生评奖评优管理系统。其目的在于为教务工作有关部门提供优质、高效的业务管理和事务处理的同时,采用安全可靠的处理和控制技术,及时、准确、可靠地采集和传输信息,建立完备、可靠的处理机制,提高工作效率,减少出错率。
-                </div>
-                <div className="info">
-                  &nbsp;&nbsp;&nbsp;&nbsp;本人负责的学生评奖评优管理系统,是由学生和管理员两部分组成。管理员主要是对学生信息数据库的导入和删除等操作与对奖学金评定相关信息的分类统计,以便能得出评定的结果。该系统运用MongoDB作为后台数据库,用node+react为开发工具。本文论述了系统从分析到实现的整个过程,说明系统实现的基本思路,介绍系统不同的功能模块以及实现的相关技术。
-                </div>
+                <FormItem>
+                {getFieldDecorator("username", {
+                  rules: [
+                    { max: 12, message: "最大长度为12位字符" },
+                    {
+                      required: true,
+                      whitespace: true,
+                      message: "请输入用户名"
+                    }
+                  ]
+                })(
+                  <Input
+                    prefix={<Icon type="user" style={{ fontSize: 13 }} />}
+                    size="large"
+                    id="username" // 为了获取焦点
+                    placeholder="请输入账号"
+                    onPressEnter={() => this.onSubmit()}
+                  />
+                )}
+              </FormItem>
+              <FormItem>
+                {getFieldDecorator("oldpassword", {
+                  rules: [
+                    { required: true, message: "请输入旧的密码" },
+                    { max: 18, message: "最大长度18个字符" }
+                  ]
+                })(
+                  <Input
+                    prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
+                    size="large"
+                    type="password"
+                    placeholder="请输入旧的密码"
+                    onPressEnter={() => this.onSubmit()}
+                  />
+                )}
+              </FormItem>
+              <FormItem>
+                {getFieldDecorator("newpassword", {
+                  rules: [
+                    { required: true, message: "请输入新的密码" },
+                    { max: 18, message: "最大长度18个字符" }
+                  ]
+                })(
+                  <Input
+                    prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
+                    size="large"
+                    type="password"
+                    placeholder="请输入新的密码"
+                    onPressEnter={() => this.onSubmit()}
+                  />
+                )}
+              </FormItem>
+              <div style={{ lineHeight: "40px" }}>
+                <Button
+                  className="submit-btn"
+                  size="large"
+                  type="primary"
+                  loading={this.state.loading}
+                  onClick={() => this.onSubmit()}
+                >
+                  {this.state.loading ? "请稍后" : "修改"}
+                </Button>
+              </div>
               </div>
             </div>
           </Content>
@@ -148,4 +206,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default Form.create()(ChangePassword);

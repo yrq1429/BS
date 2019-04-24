@@ -4,7 +4,6 @@ import P from "prop-types";
 import { Layout, Icon, Menu } from "antd";
 import { Link } from "react-router-dom";
 import "./index.scss";
-import ImgLogo from "../../assets/logo.png";
 import _ from "lodash";
 
 const { Sider } = Layout;
@@ -130,8 +129,8 @@ export default class Com extends React.PureComponent {
       >
         <div className={this.props.collapsed ? "menuLogo hide" : "menuLogo"}>
           <Link to="/">
-            <img src={ImgLogo} />
-            <div>管理系统</div>
+            <img src="http://www.ecit.cn/_upload/tpl/02/44/580/template580/images/logo.png" />
+            <div>评优评先管理系统</div>
           </Link>
         </div>
         <Menu

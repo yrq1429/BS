@@ -13,15 +13,14 @@ export default class Com extends React.PureComponent {
   render() {
     return (
       <Footer className="footer">
-        © 2018-2019{" "}
+        XXX大学学生评优评先管理系统{" "}
         <a
-          href="https://blog.isluo.com"
+          href="www.ecit.cn"
           target="_blank"
           rel="noopener noreferrer"
         >
-          blog.isluo.com
+          学校官网
         </a>
-        , Inc.
       </Footer>
     );
   }

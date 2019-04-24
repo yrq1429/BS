@@ -1,0 +1,39 @@
+.page-basic {
+  width: 100%;
+  min-height: 100vh;
+  .menus {
+    margin-top: 16px;
+    margin-left: 16px;
+    a{
+      color: blue;
+    }
+  }
+  .content {
+    margin: 16px;
+    padding: 16px;
+    background: #fff;
+    height: 100%;
+    min-height: 280px;
+    .page-home {
+      padding: 30px 0 0 0;
+      .box {
+        margin: 0 auto;
+        .title {
+          font-size: 28px;
+          text-align: center;   
+          margin-bottom: 15px;       
+        }
+        .info {
+          width: 800px;
+          margin: 10px;
+          line-height: 30px;
+          color: #888;
+          margin: 0 auto;
+          font-size: 18px;
+          color: #000;
+          letter-spacing: 2px;
+        }
+      }
+    }
+  }
+}

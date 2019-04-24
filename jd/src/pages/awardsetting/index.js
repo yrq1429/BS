@@ -24,7 +24,7 @@ import Loadable from "react-loadable";
 //   });
 // });
 const { Content } = Layout;
-class Home extends Component {
+class AwardSetting extends Component {
   constructor (props) {
     super (props);
     this.state = {
@@ -82,16 +82,6 @@ class Home extends Component {
         },
         {
           id: 6,
-          title: "奖学金结果",
-          icon: "coffee",
-          url: "/awardfinally",
-          parent: 2,
-          desc: "奖学金结果",
-          sorts: 2,
-          conditions: 1
-        },
-        {
-          id: 7,
           title: "修改密码",
           icon: "appstore",
           url: "/changepassword",
@@ -124,7 +114,7 @@ class Home extends Component {
             </Breadcrumb>
           </div>
           <Content className="content">
-            <div className="page-home">
+            <div className="award-home">
               <div className="box">
                 <div className="title">
                   学校概况
@@ -148,4 +138,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default AwardSetting;

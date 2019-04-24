@@ -4,7 +4,6 @@ import { Router, Route, Switch, Redirect } from "react-router-dom";
 // import tools from "../util/tools";
 import Home from "../pages/home";
 import Login from "../pages/login";
-
 class RootContainer extends React.Component {
 
   constructor(props) {
@@ -18,7 +17,7 @@ class RootContainer extends React.Component {
          <Fragment>
            <Route exact path='/' component={ Home }></Route>
            <Route exact path='/home' component={ Home }></Route>           
-           <Route exact path='/login' component={ Login }></Route>                        
+           <Route exact path='/login' component={ Login }></Route>                                                
          </Fragment>
      </Router>
     );

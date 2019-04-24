@@ -1,0 +1,22 @@
+.page-basic {
+  width: 100%;
+  min-height: 100vh;
+  .menus {
+    margin-top: 16px;
+    margin-left: 16px;
+    a{
+      color: blue;
+    }
+  }
+  .content {
+    margin: 16px;
+    padding: 16px;
+    background: #fff;
+    height: 100%;
+    min-height: 280px;
+    .page-home {
+      width: 300px;
+      margin: 0 auto;
+    }
+  }
+}
