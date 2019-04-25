@@ -16,7 +16,9 @@ import Loading from "../../a_component/Loading";
 import tools from "../../util/tools";
 import Loadable from "react-loadable";
 import menuData from '../menu-data.json';
+import { Radio } from 'antd';
 
+const RadioGroup = Radio.Group;
 const { Content } = Layout;
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -43,12 +45,14 @@ class ManageStudent extends Component {
 
   getTable = () => {
     const data = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 20; i++) {
       data.push({
         key: i.toString(),
         name: `Edrward ${i}`,
-        age: 32,
-        address: `London Park no. ${i}`,
+        account: `1521814${i}`,
+        college: `软件学院`,
+        profession: 80+i,
+        award: 30+i
       });
     }
     const FormItem = Form.Item;
@@ -103,21 +107,33 @@ class ManageStudent extends Component {
         this.state = { data, editingKey: '' };
         this.columns = [
           {
-            title: 'name',
-            dataIndex: 'name',
-            width: '25%',
-            editable: true,
-          },
-          {
-            title: 'age',
-            dataIndex: 'age',
+            title: '学号',
+            dataIndex: 'account',
             width: '15%',
             editable: true,
           },
           {
-            title: 'address',
-            dataIndex: 'address',
-            width: '40%',
+            title: '姓名',
+            dataIndex: 'name',
+            width: '15%',
+            editable: true,
+          },
+          {
+            title: '学院',
+            dataIndex: 'college',
+            width: '15%',
+            editable: true,
+          },
+          {
+            title: '专业成绩',
+            dataIndex: 'profession',
+            width: '15%',
+            editable: true,
+          },
+          {
+            title: '获奖成绩',
+            dataIndex: 'award',
+            width: '15%',
             editable: true,
           },
           {
@@ -149,7 +165,10 @@ class ManageStudent extends Component {
                       </Popconfirm>
                     </span>
                   ) : (
-                    <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>Edit</a>
+                    <div>
+                      <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <a disabled={editingKey !== ''} onClick={() => this.delete(record.key)}>删除</a>
+                    </div>
                   )}
                 </div>
               );
@@ -187,6 +206,9 @@ class ManageStudent extends Component {
 
       edit(key) {
         this.setState({ editingKey: key });
+      }
+      delete(key) {
+        alert("删除")
       }
 
       render() {
@@ -260,9 +282,20 @@ class ManageStudent extends Component {
             </Breadcrumb>
           </div>
           <Content className="content">
-            {
-              this.getTable()
-            }
+            <div className="page-home">
+              <div className="box">
+                <div className="title">查看学生成绩</div>
+              </div>
+              <div className="options">
+                管理成绩：<RadioGroup name="radiogroup" defaultValue="ownclass">
+                          <Radio value="ownclass">所带班级成绩</Radio>
+                          <Radio value="allclass" disabled>全部成绩</Radio>
+                        </RadioGroup>
+              </div>
+              {
+                this.getTable()
+              }
+            </div>
           </Content>
           <Footer />
         </Layout>
