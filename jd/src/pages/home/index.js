@@ -8,6 +8,7 @@ import Footer from "../../a_component/Footer";
 import Loading from "../../a_component/Loading";
 import tools from "../../util/tools";
 import Loadable from "react-loadable";
+import menuData from '../menu-data.json';
 /** 普通组件 **/
 // import { message } from "antd";
 // const [NotFound, NoPower, MenuAdmin, PowerAdmin, RoleAdmin, UserAdmin] = [
@@ -29,80 +30,8 @@ class Home extends Component {
     super (props);
     this.state = {
       collapsed: false,
-      menus: [
-        {
-          id: 1,
-          title: "首页",
-          icon: "home",
-          url: "/home",
-          parent: null,
-          desc: "首页",
-          sorts: 0,
-          conditions: 1
-        },
-        {
-          id: 2,
-          title: "系统管理",
-          icon: "setting",
-          url: "/system",
-          parent: null,
-          desc: "系统管理目录分支",
-          sorts: 1,
-          conditions: 1
-        },
-        {
-          id: 3,
-          title: "查询学生成绩",
-          icon: "user",
-          url: "/studentsearch",
-          parent: 2,
-          desc: "系统管理/用户管理",
-          sorts: 0,
-          conditions: 1
-        },
-        {
-          id: 4,
-          title: "添加学生成绩",
-          icon: "team",
-          url: "/add",
-          parent: 2,
-          desc: "添加学生成绩",
-          sorts: 1,
-          conditions: 1
-        },
-        {
-          id: 5,
-          title: "奖学金设定",
-          icon: "coffee",
-          url: "/awardsetting",
-          parent: 2,
-          desc: "系统管理/权限管理",
-          sorts: 2,
-          conditions: 1
-        },
-        {
-          id: 6,
-          title: "奖学金结果",
-          icon: "coffee",
-          url: "/awardfinally",
-          parent: 2,
-          desc: "奖学金结果",
-          sorts: 2,
-          conditions: 1
-        },
-        {
-          id: 7,
-          title: "修改密码",
-          icon: "appstore",
-          url: "/changepassword",
-          parent: 2,
-          desc: "修改密码",
-          sorts: 3,
-          conditions: 1
-        }
-      ],
+      menus: menuData.menu,
       location: ""
-      
     }
   }
 
