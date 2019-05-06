@@ -8,7 +8,7 @@ var Userscore = require('../model/userscore.js');
 mongoose.connect('mongodb://127.0.0.1/school')
 
 mongoose.connection.on('connected', () => {
-  console.log('连接成功')
+  console.log('连接成功la');
 })
 
 mongoose.connection.on('error', () => {

@@ -4,6 +4,6 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   account: String,
   password: String,
-  root: String
+  type: String
 });
 module.exports =  userSchema;

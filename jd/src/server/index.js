@@ -15,32 +15,35 @@ var connection = mysql.createConnection({
   database : 'school',
   multipleStatements: true
 });
- 
+
 connection.connect();
+
+
 
 // 登录功能
 app.post('/login',function (req,res) {
-  var  name=req.body.account;
-  var  pwd=req.body.password;
-  var selectSQL = "select * from user where username = '"+name+"' and password = '"+pwd+"'";
-  connection.query(selectSQL,function (err,result) {
+  var  account=req.body.account;
+  var  password=req.body.password;
+  console.log(account, password)
+  var selectSQL = "select * from user where account = '"+account+"' and password = '"+password+"'";
+  connection.query(selectSQL,(err,result) => {
       if (err) throw  err;
-      if(result==[])
-        {
-          res.json({
-            code: '10004',
+      // console.log(result)
+      if(result.length == 0) {
+          // console.log("10004")
+          res.send({
+            code: 10004,
             msg: '用户名或密码错误'
           });
-        }
-        else
-        {
-          res.json({
-            code: '10000',
+          res.end();
+      } else{
+          // console.log("10000")
+          res.send({
+            code: 10000,
             msg: '操作成功'
           });
-        }
-      
-      console.log('OK');
+          res.end();
+      }      
   })
 })
 
@@ -74,15 +77,13 @@ app.post('/getall', (req, res) => {
   var limit = req.body.limit;
   console.log(page, limit)
   var start = (page - 1)*limit;
-  // var sql1 = 'SELECT COUNT(*) as total FROM score';
-  // var sql2 = 'SELECT * FROM score limit ' + start + ',10';
-  var sql = 'SELECT COUNT(*) as total FROM score; SELECT * FROM score limit ' + start + ',10'; 
+  var sql = 'SELECT COUNT(*) as total FROM score; SELECT * FROM score limit ' + start + ','+(10*page); 
+  console.log(sql);
   connection.query(sql, function (err, results) {
     if (err){
-        throw err
+      console.log(err)
     }else{
-      console.log(results[0][0].total)   
-      console.log(results[1])  ;
+      console.log(results)
       var allPage = parseInt(results[0][0].total)/10;
       var pageStr = allPage.toString();
       if (pageStr.indexOf('.')>0) {
@@ -92,12 +93,38 @@ app.post('/getall', (req, res) => {
         code: 10000,
         msg: "操作成功",
         data: results[1],
-        total: allPage
+        total: allPage,
+        page: page,
+        limit: limit
       })
    }
-  }) 
+  })    
 })
 
+// 按学号查询成绩
+app.post('/getone', (req, res) => {
+  var account = req.body.account;
+  var sql = "select * from score where account = '"+ account +"'";
+  connection.query(sql, (err, result) => {
+    if (err) {
+      console.log("查询失败")
+    }  else {
+      console.log(result)
+      if (result.length == 0) {
+        res.send({
+          code: 10004,
+          msg: "没有该生成绩"
+        })
+      } else {
+        res.send({
+          code: 10000,
+          msg: "查询成功",
+          data: result
+        })
+      }
+    }
+  })
+})
 
 
 

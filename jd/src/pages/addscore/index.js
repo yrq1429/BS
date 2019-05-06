@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './index.scss';
 import { Router, Route, Switch, Redirect } from "react-router-dom";
-import { Layout, message, Breadcrumb, Radio,Row, Col   } from "antd";
+import { Layout, message, Breadcrumb, Radio,Row, Col  } from "antd";
 import {
   Form, Select, Input, Button,
 } from 'antd';
@@ -14,7 +14,8 @@ import Loading from "../../a_component/Loading";
 import tools from "../../util/tools";
 import Loadable from "react-loadable";
 import menuData from '../menu-data.json';
-
+import axios from 'axios';
+import qs from 'qs';
 const { Content } = Layout;
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -25,20 +26,72 @@ class AddScore extends Component {
       collapsed: false,
       menus: menuData.menu,
       location: "",
-      
+      score: {
+        username: '',
+        account: '',
+        college: '',
+        profession: '',
+        profession_score: '',
+        award_score: ''
+      }
     }
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
+    const { score } = this.state;
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        alert("已添加")
-      } else {
-        
+        console.log(this.state.score);
+        axios.post('/add', qs.stringify(
+          score
+        ))
+        .then(res => {
+          console.log(res);
+          if (res.data.code === 10000) {
+            message.info('添加成功');  
+            this.props.form.resetFields();
+          } else if (res.data.code === 10004) {
+            message.info('添加失败')
+            this.props.form.resetFields();
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
       }
     });
   }
+
+  handleAddScore = (e, type) => {
+    const { score } = this.state;
+    switch (type) {
+      case "username":
+        score.username = e.target.value;
+        break;
+      case "account":
+        score.account = e.target.value;
+        break;
+      case "college":
+        score.college = e.target.value;
+        break;
+      case "profession":
+        score.profession = e.target.value;
+        break;
+      case "profession_score":
+        score.profession_score = e.target.value;
+        break;
+      case "award_score":
+        score.award_score = e.target.value;
+        break;
+      default:
+        break;
+    }
+    this.setState({
+      score
+    })
+  }
+
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -97,7 +150,9 @@ class AddScore extends Component {
                     }
                   ],
                 })(
-                  <Input />
+                  <Input 
+                    onChange = { (e) => this.handleAddScore(e, "username") }
+                  />
                 )}
               </Form.Item>
               <Form.Item
@@ -113,7 +168,9 @@ class AddScore extends Component {
                     }
                   ],
                 })(
-                  <Input type="password" />
+                  <Input 
+                    onChange = { (e) => this.handleAddScore(e, "account") }                    
+                  />
                 )}
               </Form.Item>
               <Form.Item
@@ -129,7 +186,9 @@ class AddScore extends Component {
                     }
                   ],
                 })(
-                  <Input type="password" />
+                  <Input 
+                  onChange = { (e) => this.handleAddScore(e, "college") }                    
+                  />
                 )}
               </Form.Item>
               <Form.Item
@@ -145,7 +204,9 @@ class AddScore extends Component {
                     }
                   ],
                 })(
-                  <Input type="password" />
+                  <Input 
+                  onChange = { (e) => this.handleAddScore(e, "profession") }                    
+                  />
                 )}
               </Form.Item>
 
@@ -162,7 +223,9 @@ class AddScore extends Component {
                     }
                   ],
                 })(
-                  <Input type="password" />
+                  <Input 
+                  onChange = { (e) => this.handleAddScore(e, "profession_score") }                                      
+                  />
                 )}
               </Form.Item>
               <Form.Item
@@ -178,7 +241,9 @@ class AddScore extends Component {
                     }
                   ],
                 })(
-                  <Input type="password" />
+                  <Input 
+                  onChange = { (e) => this.handleAddScore(e, "award_score") }                   
+                  />
                 )}
               </Form.Item>
               <Form.Item {...tailFormItemLayout}>

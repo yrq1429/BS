@@ -14,6 +14,8 @@ import Loading from "../../a_component/Loading";
 import tools from "../../util/tools";
 import Loadable from "react-loadable";
 import menuData from '../menu-data.json';
+import axios from 'axios';
+import qs from 'qs';
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -26,30 +28,16 @@ class StudentSearch extends Component {
       collapsed: false,
       menus: menuData.menu,
       location: "",
-      dataSource: [{
-        key: '1',
-        name: '刘德华',
-        sex: '男',
-        nums: "152181401",
-        college: "软件学院",
-        de_score: 80,
-        ti_score: 80,
-        zhi_score: 80, 
-        avg_score: 80,     
-      }],
+      dataSource: [],
       columns : [
         {
         title: '姓名',
-        dataIndex: 'name',
-        key: 'name',
-        }, {
-          title: '性别',
-          dataIndex: 'sex',
-          key: 'sex',
+        dataIndex: 'username',
+        key: 'username',
         }, {
           title: '学号',
-          dataIndex: 'nums',
-          key: 'nums',
+          dataIndex: 'account',
+          key: 'account',
         },
         {
           title: '学院',
@@ -57,36 +45,54 @@ class StudentSearch extends Component {
           key: 'college',
         },
         {
-          title: '德育成绩',
-          dataIndex: 'de_score',
-          key: 'de_score',
+          title: '专业',
+          dataIndex: 'prefession',
+          key: 'prefession',
         },
         {
-          title: '体育成绩',
-          dataIndex: 'ti_score',
-          key: 'ti_score',
+          title: '专业成绩',
+          dataIndex: 'prefession_score',
+          key: 'prefession_score',
         },
         {
-          title: '智育成绩',
-          dataIndex: 'zhi_score',
-          key: 'zhi_score',
-        }, {
-          title: "综合成绩",
-          dataIndex: "avg_score",
-          key: "avg_score"
+          title: '获奖成绩',
+          dataIndex: 'award_score',
+          key: 'award_score',
         }
-      ]
-      
+      ],
+      account:''
     }
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
+    console.log(this.state.account)
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        axios.post("/getone", {"account":this.state.account})
+        .then(res => {
+          if (res.data.code == 10004) {
+            message.info("未查到该生成绩")
+          } else if (res.data.code == 10000) {
+            message.info("查询成功");
+            this.setState({
+              dataSource: res.data.data
+            })
+            this.props.form.resetFields();                          
+          }
+        })
+      } else {
+        console.log("查询有误")
       }
     });
+  }
+
+  handleChangeAccount = (e) => {
+    const { account } = this.state;
+    var newaccount = e.target.value;
+    this.setState({
+      account: newaccount
+    })
   }
 
 
@@ -118,7 +124,9 @@ class StudentSearch extends Component {
                 {getFieldDecorator('note', {
                   rules: [{ required: true, message: 'Please input your note!' }],
                 })(
-                  <Input />
+                  <Input
+                    onChange = { e => this.handleChangeAccount(e) }
+                  />
                 )}
               </Form.Item>
               <Form.Item

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { HashRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import { GlobalStyle } from "./style";
 import Home from "./pages/home";
 import Login from "./pages/login";
@@ -12,13 +12,7 @@ import axios from 'axios';
 class App extends Component {
 
   componentWillMount() {
-    let data = {"account":"1234","password":"123123","type":"yyyy"};
-    axios.post('localhost:3001/api/login', data)
-        .then(function (res) {
-      　　console.log("、user  success")
-      }).catch(function (error) {
-        　　console.log("、user  fail")
-      });
+   
   }
 
   render() {

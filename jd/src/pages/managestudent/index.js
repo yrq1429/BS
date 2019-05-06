@@ -17,7 +17,8 @@ import tools from "../../util/tools";
 import Loadable from "react-loadable";
 import menuData from '../menu-data.json';
 import { Radio } from 'antd';
-
+import axios from 'axios';
+import qs from 'qs';
 const RadioGroup = Radio.Group;
 const { Content } = Layout;
 const { Option } = Select;
@@ -30,34 +31,67 @@ class ManageStudent extends Component {
       collapsed: false,
       menus: menuData.menu,
       location: "",
-      
+      data: [],
+      pageData: {
+        "page": 1,
+        "limit": 10,
+        "total":1
+      },
     }
+    const _self = this;
   }
+
+  componentWillMount() {
+    this.getData(this.state.pageData)
+  }
+
 
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        
       }
     });
   }
 
+  getData = (data) => {
+    axios.post('/getall', qs.stringify(data))
+      .then(res => {
+        // console.log(res);
+        this.setState({
+          data: res.data.data,
+          pageData: {
+            "page": parseInt(res.data.page),
+            "limit": 10,
+            "total":res.data.total
+          }
+        })
+      })
+  }
+
+  changePage = (current) => {
+    const { pageData } = this.state;
+    pageData.page = current;
+    this.setState({
+      pageData
+    }, () => {
+      this.getData(pageData)
+    })
+  }
+
   getTable = () => {
-    const data = [];
-    for (let i = 0; i < 20; i++) {
-      data.push({
-        key: i.toString(),
-        name: `Edrward ${i}`,
-        account: `1521814${i}`,
-        college: `软件学院`,
-        profession: 80+i,
-        award: 30+i
-      });
-    }
+    const { data, pageData } = this.state;
+    console.log(pageData)
+    
     const FormItem = Form.Item;
     const EditableContext = React.createContext();
-
+    const paginationProps = {
+      showQuickJumper: false,
+      current: pageData.page,
+      total: pageData.total*10,
+      onChange: (current) => this.changePage(current),
+    }
     class EditableCell extends React.Component {
       getInput = () => {
         if (this.props.inputType === 'number') {
@@ -104,8 +138,14 @@ class ManageStudent extends Component {
     class EditableTable extends React.Component {
       constructor(props) {
         super(props);
-        this.state = { data, editingKey: '' };
+        this.state = { data, editingKey: '' }
         this.columns = [
+          // {
+          //   title: "",
+          //   dataIndex: 'id',
+          //   width: '5%',
+          //   editable: true,
+          // },
           {
             title: '学号',
             dataIndex: 'account',
@@ -114,7 +154,7 @@ class ManageStudent extends Component {
           },
           {
             title: '姓名',
-            dataIndex: 'name',
+            dataIndex: 'username',
             width: '15%',
             editable: true,
           },
@@ -126,13 +166,13 @@ class ManageStudent extends Component {
           },
           {
             title: '专业成绩',
-            dataIndex: 'profession',
+            dataIndex: 'prefession_score',
             width: '15%',
             editable: true,
           },
           {
             title: '获奖成绩',
-            dataIndex: 'award',
+            dataIndex: 'award_score',
             width: '15%',
             editable: true,
           },
@@ -218,7 +258,7 @@ class ManageStudent extends Component {
           },
         };
 
-        const columns = this.columns.map((col) => {
+        const columns = this.columns.map((col, index) => {
           if (!col.editable) {
             return col;
           }
@@ -242,9 +282,7 @@ class ManageStudent extends Component {
               dataSource={this.state.data}
               columns={columns}
               rowClassName="editable-row"
-              pagination={{
-                onChange: this.cancel,
-              }}
+              pagination = {paginationProps}
             />
           </EditableContext.Provider>
         );
