@@ -3,10 +3,11 @@ var mongoose = require('mongoose');
 var DB_URL = 'mongodb://localhost:27017/school';
 const bodyParser = require("body-parser");
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
- 
+app.use(cookieParser())
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
   host     : 'localhost',
@@ -37,10 +38,16 @@ app.post('/login',function (req,res) {
           });
           res.end();
       } else{
-          // console.log("10000")
+          // console.log(result[0].username)
+          const cookieData = {"account":result[0].account,"username":result[0].username,"password":result[0].password};
+          res.cookie("account",result[0].account,{maxAge:1000*60*60});
+          res.cookie("password",result[0].password,{maxAge:1000*60*60});
+          
+          // console.log({"account":result[0].account,"username":result[0].username,"password":result[0].password})
           res.send({
             code: 10000,
-            msg: '操作成功'
+            msg: '操作成功',
+            data: result
           });
           res.end();
       }      
@@ -50,13 +57,16 @@ app.post('/login',function (req,res) {
 // 增加学生成绩
 app.post('/add', (req, res) => {
   var  username=req.body.username;
+  var  className=req.body.class;  
+  var  date=req.body.date;  
   var  account=req.body.account;
   var  college=req.body.college;
   var  profession=req.body.profession;
   var  profession_score=req.body.profession_score;
-  var  award_score=req.body. award_score;
-  var ADD_SCORE = "insert into score(username, account, college, prefession, prefession_score, award_score) values(?,?,?,?,?,?)";
-  var params = [username, account, college, profession, profession_score, award_score];
+  var  award_score=req.body.award_score;
+  var ADD_SCORE = "insert into score(username,class,date, account, college, prefession, prefession_score, award_score) values(?,?,?,?,?,?,?,?)";
+  var params = [username,className,date, account, college, profession, profession_score, award_score];
+  console.log(params)
   connection.query(ADD_SCORE, params, function(error, result){
     if(error)
     {
@@ -126,6 +136,88 @@ app.post('/getone', (req, res) => {
   })
 })
 
+// 修改密码
+app.post('/changepwd', (req, res) => {
+  console.log(req.body)
+  var account = req.body.account;
+  var oldpassword = req.body.oldpassword;  
+  var newpassword = req.body.newpassword;
+  var userModSql = 'UPDATE user SET password = ? WHERE account = ?';
+  var userModSql_Params = [newpassword, account];
+  connection.query(userModSql,userModSql_Params, (err, result) => {
+    if(err){
+          console.log('[UPDATE ERROR] - ',err.message);
+          return;
+    }else {
+      if (result.length == 0) {
+        res.send({
+          code: 10004,
+          msg: "修改失败"
+        })
+      } else {
+        res.cookie("account",req.body.account,{maxAge:1000*60*60});
+        res.cookie("password",req.body.newpassword,{maxAge:1000*60*60});
+        res.send({
+          code: 10000,
+          msg: "修改成功"
+        })
+      }
+      
+    }
+  })
+})
+
+// 修改数据功能
+app.post('/update', (req, res) => {
+  console.log(req.body)
+  var newId = req.body.id;
+  var newusername = req.body.username;
+  var newaccount = req.body.account;
+  var newcollege = req.body.college;
+  var newprefession = req.body.prefession;
+  var newprefession_score = req.body.prefession_score;
+  var newaward_score = req.body.award_score;
+  var newclass = req.body.class;
+  var newdate = req.body.date;
+  var sql = "UPDATE score SET username = ?,account = ?,college = ?,prefession = ?,prefession_score = ?,award_score = ?,class = ?,date = ? WHERE id = ?";
+  var params = [newusername, newaccount, newcollege, newprefession, newprefession_score, newaward_score,newclass, newdate, newId];
+  connection.query(sql,params, (err, result) => {
+    if(err){
+          console.log('[UPDATE ERROR] - ',err.message);
+          return;
+    }else {
+      if (result.length == 0) {
+        res.send({
+          code: 10004,
+          msg: "修改失败"
+        })
+      } else {
+        res.send({
+          code: 10000,
+          msg: "修改成功"
+        })
+      }
+      
+    }
+  })
+  
+})
+  
+app.post("/delete", (req, res) => {
+  var newId = req.body.id;
+  var params = [newId]
+  var sql = `delete from score where id = ?`;
+  connection.query(sql, params, (err, result) => {
+    if (result.length === 0) {
+      console.log("error")
+    } else{
+      res.send({
+        code: 10000,
+        msg: "删除成功"
+      })
+    }
+  })
+})
 
 
 
