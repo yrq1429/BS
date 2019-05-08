@@ -31,8 +31,15 @@ class Home extends Component {
     this.state = {
       collapsed: false,
       menus: menuData.menu,
-      location: ""
+      location: "",
+      userInfo: { username:"121212" }
     }
+  }
+  
+  componentDidMount() {
+      this.setState({
+        userInfo: this.props.location.query
+      })
   }
 
   render() {
@@ -42,10 +49,12 @@ class Home extends Component {
           data={this.state.menus}
           collapsed={this.state.collapsed}
           location={this.state.location}
+          userInfo = { this.props.location.query }
         />
         <Layout>
           <Header
             collapsed={this.state.collapsed}
+            data = { this.state.userInfo }
           />
           <div className="menus">
             <Breadcrumb>

@@ -17,7 +17,7 @@ import menuData from '../menu-data.json';
 import axios from 'axios';
 import qs from 'qs';
 const { Content } = Layout;
-const { Option } = Select;
+const { Option, OptGroup  } = Select;
 const FormItem = Form.Item;
 class AddScore extends Component {
   constructor (props) {
@@ -32,7 +32,9 @@ class AddScore extends Component {
         college: '',
         profession: '',
         profession_score: '',
-        award_score: ''
+        award_score: '',
+        date: "2015-2016",
+        class: ""
       }
     }
   }
@@ -84,6 +86,9 @@ class AddScore extends Component {
       case "award_score":
         score.award_score = e.target.value;
         break;
+      case "class":
+        score.class = e.target.value;
+        break;
       default:
         break;
     }
@@ -92,6 +97,16 @@ class AddScore extends Component {
     })
   }
 
+  handleChangeSelect = (value) => {
+    const { score } = this.state;
+    console.log(value)
+    score.date = value;
+    this.setState({
+      score
+    }, () => {
+      console.log(score.date.key)
+    })    
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -155,6 +170,36 @@ class AddScore extends Component {
                   />
                 )}
               </Form.Item>
+              <Form.Item
+                label="班级"
+              >
+                {getFieldDecorator('class', {
+                  rules: [
+                    { max: 12, message: "最大长度为12位字符" },
+                    {
+                      required: true,
+                      whitespace: true,
+                      message: "请输入班级"
+                    }
+                  ],
+                })(
+                  <Input 
+                    onChange = { (e) => this.handleAddScore(e, "class") }
+                  />
+                )}
+              </Form.Item>
+              <Form.Item
+                label="年份"
+              >
+                <Select value={this.state.score.date} style={{ width: 350 }} 
+                  onChange={this.handleChangeSelect}>
+                  <Option value="2015-2016">2015-2016</Option>
+                  <Option value="2016-2017">2016-2017</Option>
+                  <Option value="2017-2018">2017-2018</Option>
+                  <Option value="2018-2019">2018-2019</Option>                  
+                </Select>
+              </Form.Item>
+              
               <Form.Item
                 label="学号"
               >

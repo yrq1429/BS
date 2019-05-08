@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 import { Layout, message, Breadcrumb } from "antd";
 import { Form, Input, Button, Icon, Checkbox } from "antd";
-
+import qs from 'qs'
 import './index.scss'
 import Header from "../../a_component/Header";
 import Menu from "../../a_component/Menu";
@@ -26,6 +26,7 @@ import Loadable from "react-loadable";
 //   });
 // });
 import menuData from '../menu-data.json';
+import axios from "axios";
 
 const { Content } = Layout;
 const FormItem = Form.Item;
@@ -36,16 +37,74 @@ class ChangePassword extends Component {
     this.state = {
       collapsed: false,
       menus: menuData.menu,
-      location: ""
-      
+      location: "",
+      data: {
+        account: "",
+        oldpassword:"",
+        newpassword:""       
+      },
+      old:""
     }
   }
 
+  handleChangePwd = (e, type) => {
+    const { data } = this.state;
+    switch (type) {
+      case "old":
+        data.oldpassword = e.target.value;
+        break;
+      case "new":
+        data.newpassword = e.target.value;
+        break;
+      default:
+        break;
+    }
+    this.setState({
+      data
+    })
+  }
+
+  componentDidMount() {
+    console.log(document.cookie);
+    const { data } = this.state;
+    data.account = this.getCookie("account")
+    console.log(this.getCookie("account"));
+    this.setState({
+      data : data,
+      old: this.getCookie("password")
+    })
+  }
+  getCookie = (sName) =>{
+    var aCookie = document.cookie.split("; ");
+    for (var i=0; i < aCookie.length; i++)
+    {
+    var aCrumb = aCookie[i].split("=");
+    if (sName == aCrumb[0])
+    return unescape(aCrumb[1]);
+    }
+    return null;
+    }
   onSubmit() {
     const form = this.props.form;
+    const { old, data } = this.state;
     form.validateFields((error, values) => {
       if (error) {
         return;
+      } else {
+        if (old != data.oldpassword) {
+          alert("旧密码输入错误")
+        }else {
+          axios.post('/changepwd', qs.stringify(this.state.data))
+            .then(res => {
+              if (res.code = 10000) {
+                message.info("修改成功");
+                this.props.form.resetFields();
+              } else if (res.code = 10004) {
+                message.info("修改失败")
+              }
+            })   
+
+        }
       }
     });
   }
@@ -74,7 +133,7 @@ class ChangePassword extends Component {
                 <div className="title">
                   修改密码
                 </div>
-                <FormItem>
+                {/* <FormItem>
                 {getFieldDecorator("username", {
                   rules: [
                     { max: 12, message: "最大长度为12位字符" },
@@ -93,7 +152,7 @@ class ChangePassword extends Component {
                     onPressEnter={() => this.onSubmit()}
                   />
                 )}
-              </FormItem>
+              </FormItem> */}
               <FormItem>
                 {getFieldDecorator("oldpassword", {
                   rules: [
@@ -107,6 +166,7 @@ class ChangePassword extends Component {
                     type="password"
                     placeholder="请输入旧的密码"
                     onPressEnter={() => this.onSubmit()}
+                    onChange = { (e) => this.handleChangePwd(e, "old") }
                   />
                 )}
               </FormItem>
@@ -123,6 +183,7 @@ class ChangePassword extends Component {
                     type="password"
                     placeholder="请输入新的密码"
                     onPressEnter={() => this.onSubmit()}
+                    onChange = { (e) => this.handleChangePwd(e, "new") }                    
                   />
                 )}
               </FormItem>

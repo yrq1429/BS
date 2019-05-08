@@ -35,6 +35,14 @@ class StudentSearch extends Component {
         dataIndex: 'username',
         key: 'username',
         }, {
+          title: '班级',
+          dataIndex: 'class',
+          key: 'class',
+        },{
+          title: '年份',
+          dataIndex: 'date',
+          key: 'date',
+        },{
           title: '学号',
           dataIndex: 'account',
           key: 'account',

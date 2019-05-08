@@ -36,7 +36,7 @@ class Login extends React.Component {
                 if (res.data.code === 10000) {
                   message.info('登录成功');                  
                   setTimeout(() => {
-                    this.props.history.push('/home');                    
+                    this.props.history.push({pathname: '/home',query: res.data.data[0]});                    
                   }, 1500);
                 } else if (res.data.code === 10004) {
                   message.info('用户名或密码错误')

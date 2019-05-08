@@ -55,10 +55,12 @@ class ManageStudent extends Component {
     });
   }
 
+  // 请求数据
   getData = (data) => {
     axios.post('/getall', qs.stringify(data))
       .then(res => {
-        // console.log(res);
+        console.log(res);
+        console.log("aaa")
         this.setState({
           data: res.data.data,
           pageData: {
@@ -83,7 +85,7 @@ class ManageStudent extends Component {
   getTable = () => {
     const { data, pageData } = this.state;
     console.log(pageData)
-    
+    const that = this;
     const FormItem = Form.Item;
     const EditableContext = React.createContext();
     const paginationProps = {
@@ -149,31 +151,49 @@ class ManageStudent extends Component {
           {
             title: '学号',
             dataIndex: 'account',
-            width: '15%',
+            width: '12%',
+            editable: true,
+          },
+          {
+            title: '班级',
+            dataIndex: 'class',
+            width: '12%',
+            editable: true,
+          },
+          {
+            title: '学年',
+            dataIndex: 'date',
+            width: '12%',
             editable: true,
           },
           {
             title: '姓名',
             dataIndex: 'username',
-            width: '15%',
+            width: '12%',
             editable: true,
           },
           {
             title: '学院',
             dataIndex: 'college',
-            width: '15%',
+            width: '12%',
+            editable: true,
+          },
+          {
+            title: '专业',
+            dataIndex: 'prefession',
+            width: '12%',
             editable: true,
           },
           {
             title: '专业成绩',
             dataIndex: 'prefession_score',
-            width: '15%',
+            width: '8%',
             editable: true,
           },
           {
             title: '获奖成绩',
             dataIndex: 'award_score',
-            width: '15%',
+            width: '8%',
             editable: true,
           },
           {
@@ -190,7 +210,7 @@ class ManageStudent extends Component {
                         {form => (
                           <a
                             href="javascript:;"
-                            onClick={() => this.save(form, record.key)}
+                            onClick={() => this.save(form, record.id)}
                             style={{ marginRight: 8 }}
                           >
                             Save
@@ -199,15 +219,15 @@ class ManageStudent extends Component {
                       </EditableContext.Consumer>
                       <Popconfirm
                         title="Sure to cancel?"
-                        onConfirm={() => this.cancel(record.key)}
+                        onConfirm={() => this.cancel(record.id)}
                       >
                         <a>Cancel</a>
                       </Popconfirm>
                     </span>
                   ) : (
                     <div>
-                      <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <a disabled={editingKey !== ''} onClick={() => this.delete(record.key)}>删除</a>
+                      <a disabled={editingKey !== ''} onClick={() => this.edit(record.id)}>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <a disabled={editingKey !== ''} onClick={() => this.delete(record.id)}>删除</a>
                     </div>
                   )}
                 </div>
@@ -217,26 +237,44 @@ class ManageStudent extends Component {
         ];
       }
 
-      isEditing = record => record.key === this.state.editingKey;
+      isEditing = record => record.id === this.state.editingKey;
 
       cancel = () => {
         this.setState({ editingKey: '' });
       };
+
+      // 执行save保存函数
+      handleUpdate = (data) => {
+        axios.post('/update', qs.stringify(data))
+          .then(res => {
+            console.log(res)
+          })
+      }
 
       save(form, key) {
         form.validateFields((error, row) => {
           if (error) {
             return;
           }
+          const newPageData = {
+            "page": 1,
+            "limit": 10,
+            "total":1
+          }
           const newData = [...this.state.data];
-          const index = newData.findIndex(item => key === item.key);
+          const index = newData.findIndex(item => key === item.id);
           if (index > -1) {
+            console.log(newData)
             const item = newData[index];
             newData.splice(index, 1, {
               ...item,
               ...row,
             });
-            this.setState({ data: newData, editingKey: '' });
+            console.log(newData[index])
+            this.setState({ editingKey: '' },() => {
+              this.handleUpdate(newData[index])
+              that.getData(newPageData)              
+            });
           } else {
             newData.push(row);
             this.setState({ data: newData, editingKey: '' });
@@ -245,10 +283,21 @@ class ManageStudent extends Component {
       }
 
       edit(key) {
+        console.log(key)
         this.setState({ editingKey: key });
       }
       delete(key) {
-        alert("删除")
+        const newPageData = {
+          "page": 1,
+          "limit": 10,
+          "total":1
+        }
+        // alert("删除")
+        axios.post("/delete", qs.stringify({id: key}))
+          .then(res => {
+            console.log(res);
+            that.getData(newPageData)
+          })
       }
 
       render() {
@@ -277,6 +326,7 @@ class ManageStudent extends Component {
         return (
           <EditableContext.Provider value={this.props.form}>
             <Table
+              rowKey={record => record.key}
               components={components}
               bordered
               dataSource={this.state.data}

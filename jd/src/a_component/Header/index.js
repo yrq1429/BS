@@ -11,29 +11,17 @@ export default class Com extends React.PureComponent {
     super(props);
     this.state = {
       fullScreen: false, // 当前是否是全屏状态
-      userinfo: [
-        {
-          id: 1,
-          username: "admin",
-          password: "123456",
-          phone: "13600000000",
-          email: "admin@react.com",
-          desc: "超级管理员",
-          conditions: 1,
-          roles: [1, 2, 3]
-        },
-        {
-          id: 2,
-          username: "user",
-          password: "123456",
-          phone: "13600000001",
-          email: "user@react.com",
-          desc: "普通管理员",
-          conditions: 1,
-          roles: [2]
-        }
-      ]
+      userinfo:{}
     };
+  }
+
+  componentDidMount() {
+    console.log(this.props.data);
+    this.setState({
+      userinfo: this.props.data
+    }, () => {
+      // console.log(this.state.userinfo.username)
+    })
   }
 
   /** 点击左侧按钮时触发 **/
@@ -85,27 +73,6 @@ export default class Com extends React.PureComponent {
                   selectedKeys={[]}
                   onClick={this.onMenuClick}
                 >
-                  <Menu.Item>
-                    <a
-                      href="https://blog.isluo.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Icon type="global" />
-                      blog.isluo.com
-                    </a>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <a
-                      href="https://github.com/javaLuo/react-admin"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Icon type="github" />
-                      GitHub
-                    </a>
-                  </Menu.Item>
-                  <Menu.Divider />
                   <Menu.Item key="logout">
                     <Icon type="logout" />
                     退出登录
@@ -116,7 +83,10 @@ export default class Com extends React.PureComponent {
             >
               <div className="userhead flex-row flex-ac">
                 <Icon type="smile-o" />
-                <span className="username">xiaoming</span>
+                <span className="username">
+                {/* { this.state.userinfo.username } */}
+                111
+                </span>
               </div>
             </Dropdown>
           ) : (

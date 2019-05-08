@@ -13,7 +13,7 @@ export default class Com extends React.PureComponent {
   render() {
     return (
       <Footer className="footer">
-        XXX大学学生评优评先管理系统{" "}
+        东华理工大学大学学生评优评先管理系统{" "}
         <a
           href="www.ecit.cn"
           target="_blank"
