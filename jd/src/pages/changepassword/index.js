@@ -69,10 +69,17 @@ class ChangePassword extends Component {
     const { data } = this.state;
     data.account = this.getCookie("account")
     console.log(this.getCookie("account"));
-    this.setState({
-      data : data,
-      old: this.getCookie("password")
-    })
+    var num = this.getCookie("account");
+    if (num != "root") {
+      this.setState({
+        data : data,
+        old: this.getCookie("password")
+      })
+    } else {
+      this.setState({
+        menus: menuData.rootMenu
+      })
+    }
   }
   getCookie = (sName) =>{
     var aCookie = document.cookie.split("; ");

@@ -5,23 +5,51 @@ import { Link } from "react-router-dom";
 import { Layout, Icon, Tooltip, Menu, Dropdown } from "antd";
 
 import "./index.scss";
+import axios from "axios";
+import qs from 'qs';
 const { Header } = Layout;
 export default class Com extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       fullScreen: false, // 当前是否是全屏状态
-      userinfo:{}
+      userinfo:{},
+      username: ""
     };
   }
 
   componentDidMount() {
-    console.log(this.props.data);
-    this.setState({
-      userinfo: this.props.data
-    }, () => {
-      // console.log(this.state.userinfo.username)
-    })
+    // console.log(this.props.data);
+    // this.setState({
+    //   userinfo: this.props.data
+    // }, () => {
+    //   // console.log(this.state.userinfo.username)
+      this.getName();
+    // })
+  }
+
+  getName = () => {
+    var account = this.getCookie('account');
+    axios.post('/getname', qs.stringify({
+      "account":account
+    }))
+      .then( res => {
+        console.log(res.data.data.username);
+        this.setState({
+          username: res.data.data.username
+        })
+      })
+  }
+
+  getCookie = (sName) =>{
+    var aCookie = document.cookie.split("; ");
+    for (var i=0; i < aCookie.length; i++)
+    {
+    var aCrumb = aCookie[i].split("=");
+    if (sName == aCrumb[0])
+    return unescape(aCrumb[1]);
+    }
+    return null;
   }
 
   /** 点击左侧按钮时触发 **/
@@ -85,7 +113,7 @@ export default class Com extends React.PureComponent {
                 <Icon type="smile-o" />
                 <span className="username">
                 {/* { this.state.userinfo.username } */}
-                111
+                { this.state.username }
                 </span>
               </div>
             </Dropdown>

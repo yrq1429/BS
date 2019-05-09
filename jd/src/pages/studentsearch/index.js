@@ -72,6 +72,32 @@ class StudentSearch extends Component {
     }
   }
 
+    getCookie = (sName) =>{
+      var aCookie = document.cookie.split("; ");
+      for (var i=0; i < aCookie.length; i++)
+      {
+      var aCrumb = aCookie[i].split("=");
+      if (sName == aCrumb[0])
+      return unescape(aCrumb[1]);
+      }
+      return null;
+    }
+    componentDidMount() {
+      console.log(this.getCookie("account"));
+      var num = this.getCookie("account")
+      if (num != "root") {
+        this.setState({
+          userInfo: this.props.location.query
+        })
+      } else {
+        this.setState({
+          userInfo: this.props.location.query,
+          menus: menuData.rootMenu
+        })
+      }
+      
+    }
+
   handleSubmit = (e) => {
     e.preventDefault();
     console.log(this.state.account)

@@ -70,5 +70,47 @@
       "sorts": 0,
       "conditions": 1
     }
+  ],
+  "rootMenu":[
+    {
+      "id": 1,
+      "title": "首页",
+      "icon": "home",
+      "url": "/home",
+      "parent": null,
+      "desc": "首页",
+      "sorts": 0,
+      "conditions": 1
+    },
+    {
+      "id": 2,
+      "title": "系统管理",
+      "icon": "setting",
+      "url": "/system",
+      "parent": null,
+      "desc": "系统管理分支",
+      "sorts": 0,
+      "conditions": 1
+    },
+    {
+      "id": 3,
+      "title": "添加教师",
+      "icon": "team",
+      "url": "/addteacher",
+      "parent": 2,
+      "desc": "添加教师",
+      "sorts": 0,
+      "conditions": 1
+    },
+    {
+      "id": 4,
+      "title": "管理教师",
+      "icon": "team",
+      "url": "/manageteacher",
+      "parent": 2,
+      "desc": "管理教师",
+      "sorts": 0,
+      "conditions": 1
+    }
   ]
 }

@@ -44,7 +44,6 @@ class ManageStudent extends Component {
   componentWillMount() {
     this.getData(this.state.pageData)
   }
-
   getCookie = (sName) =>{
     var aCookie = document.cookie.split("; ");
     for (var i=0; i < aCookie.length; i++)
@@ -82,7 +81,7 @@ class ManageStudent extends Component {
 
   // 请求数据
   getData = (data) => {
-    axios.post('/getall', qs.stringify(data))
+    axios.post('/getallteacher', qs.stringify(data))
       .then(res => {
         console.log(res);
         console.log("aaa")
@@ -174,51 +173,15 @@ class ManageStudent extends Component {
           //   editable: true,
           // },
           {
-            title: '学号',
+            title: '账号',
             dataIndex: 'account',
-            width: '12%',
+            width: '30%',
             editable: true,
           },
           {
-            title: '班级',
-            dataIndex: 'class',
-            width: '12%',
-            editable: true,
-          },
-          {
-            title: '学年',
-            dataIndex: 'date',
-            width: '12%',
-            editable: true,
-          },
-          {
-            title: '姓名',
+            title: '用户名',
             dataIndex: 'username',
-            width: '12%',
-            editable: true,
-          },
-          {
-            title: '学院',
-            dataIndex: 'college',
-            width: '12%',
-            editable: true,
-          },
-          {
-            title: '专业',
-            dataIndex: 'prefession',
-            width: '12%',
-            editable: true,
-          },
-          {
-            title: '专业成绩',
-            dataIndex: 'prefession_score',
-            width: '8%',
-            editable: true,
-          },
-          {
-            title: '获奖成绩',
-            dataIndex: 'award_score',
-            width: '8%',
+            width: '30%',
             editable: true,
           },
           {
@@ -235,7 +198,7 @@ class ManageStudent extends Component {
                         {form => (
                           <a
                             href="javascript:;"
-                            onClick={() => this.save(form, record.id)}
+                            onClick={() => this.save(form, record.userid)}
                             style={{ marginRight: 8 }}
                           >
                             Save
@@ -244,15 +207,15 @@ class ManageStudent extends Component {
                       </EditableContext.Consumer>
                       <Popconfirm
                         title="Sure to cancel?"
-                        onConfirm={() => this.cancel(record.id)}
+                        onConfirm={() => this.cancel(record.userid)}
                       >
                         <a>Cancel</a>
                       </Popconfirm>
                     </span>
                   ) : (
                     <div>
-                      <a disabled={editingKey !== ''} onClick={() => this.edit(record.id)}>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <a disabled={editingKey !== ''} onClick={() => this.delete(record.id)}>删除</a>
+                      <a disabled={editingKey !== ''} onClick={() => this.edit(record.userid)}>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <a disabled={editingKey !== ''} onClick={() => this.delete(record.userid)}>删除</a>
                     </div>
                   )}
                 </div>
@@ -262,7 +225,7 @@ class ManageStudent extends Component {
         ];
       }
 
-      isEditing = record => record.id === this.state.editingKey;
+      isEditing = record => record.userid === this.state.editingKey;
 
       cancel = () => {
         this.setState({ editingKey: '' });
@@ -270,7 +233,7 @@ class ManageStudent extends Component {
 
       // 执行save保存函数
       handleUpdate = (data) => {
-        axios.post('/update', qs.stringify(data))
+        axios.post('/updateteacher', qs.stringify(data))
           .then(res => {
             console.log(res)
           })
@@ -287,7 +250,8 @@ class ManageStudent extends Component {
             "total":1
           }
           const newData = [...this.state.data];
-          const index = newData.findIndex(item => key === item.id);
+          console.log(newData)
+          const index = newData.findIndex(item => key === item.userid);
           if (index > -1) {
             console.log(newData)
             const item = newData[index];
@@ -295,7 +259,9 @@ class ManageStudent extends Component {
               ...item,
               ...row,
             });
+            console.log("----------");
             console.log(newData[index])
+            console.log("----------");            
             this.setState({ editingKey: '' },() => {
               this.handleUpdate(newData[index])
               that.getData(newPageData)              
@@ -318,7 +284,7 @@ class ManageStudent extends Component {
           "total":1
         }
         // alert("删除")
-        axios.post("/delete", qs.stringify({id: key}))
+        axios.post("/deleteteacher", qs.stringify({userid: key}))
           .then(res => {
             console.log(res);
             that.getData(newPageData)
@@ -397,13 +363,7 @@ class ManageStudent extends Component {
           <Content className="content">
             <div className="page-home">
               <div className="box">
-                <div className="title">查看学生成绩</div>
-              </div>
-              <div className="options">
-                管理成绩：<RadioGroup name="radiogroup" defaultValue="ownclass">
-                          <Radio value="ownclass">所带班级成绩</Radio>
-                          <Radio value="allclass" disabled>全部成绩</Radio>
-                        </RadioGroup>
+                <div className="title">管理教师</div>
               </div>
               {
                 this.getTable()

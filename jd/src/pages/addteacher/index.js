@@ -19,7 +19,7 @@ import qs from 'qs';
 const { Content } = Layout;
 const { Option, OptGroup  } = Select;
 const FormItem = Form.Item;
-class AddScore extends Component {
+class AddTeacher extends Component {
   constructor (props) {
     super (props);
     this.state = {
@@ -29,12 +29,7 @@ class AddScore extends Component {
       score: {
         username: '',
         account: '',
-        college: '',
-        profession: '',
-        profession_score: '',
-        award_score: '',
-        date: "2015-2016",
-        class: ""
+        password: ''
       }
     }
   }
@@ -49,15 +44,20 @@ class AddScore extends Component {
     }
     return null;
   }
-
   componentDidMount() {
     console.log(this.getCookie("account"));
-      var num = this.getCookie("account")
-      if (num === "root") {
-        this.setState({
-          menus: menuData.rootMenu
-        })
-      } 
+    var num = this.getCookie("account")
+    if (num != "root") {
+      this.setState({
+        userInfo: this.props.location.query
+      })
+    } else {
+      this.setState({
+        userInfo: this.props.location.query,
+        menus: menuData.rootMenu
+      })
+    }
+    
   }
 
   handleSubmit = (e) => {
@@ -66,7 +66,7 @@ class AddScore extends Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log(this.state.score);
-        axios.post('/add', qs.stringify(
+        axios.post('/addteacher', qs.stringify(
           score
         ))
         .then(res => {
@@ -95,20 +95,8 @@ class AddScore extends Component {
       case "account":
         score.account = e.target.value;
         break;
-      case "college":
-        score.college = e.target.value;
-        break;
-      case "profession":
-        score.profession = e.target.value;
-        break;
-      case "profession_score":
-        score.profession_score = e.target.value;
-        break;
-      case "award_score":
-        score.award_score = e.target.value;
-        break;
-      case "class":
-        score.class = e.target.value;
+      case "password":
+        score.password = e.target.value;
         break;
       default:
         break;
@@ -192,9 +180,9 @@ class AddScore extends Component {
                 )}
               </Form.Item>
               <Form.Item
-                label="班级"
+                label="账号"
               >
-                {getFieldDecorator('class', {
+                {getFieldDecorator('account', {
                   rules: [
                     { max: 12, message: "最大长度为12位字符" },
                     {
@@ -205,26 +193,15 @@ class AddScore extends Component {
                   ],
                 })(
                   <Input 
-                    onChange = { (e) => this.handleAddScore(e, "class") }
+                    onChange = { (e) => this.handleAddScore(e, "account") }
                   />
                 )}
               </Form.Item>
-              <Form.Item
-                label="年份"
-              >
-                <Select value={this.state.score.date} style={{ width: 350 }} 
-                  onChange={this.handleChangeSelect}>
-                  <Option value="2015-2016">2015-2016</Option>
-                  <Option value="2016-2017">2016-2017</Option>
-                  <Option value="2017-2018">2017-2018</Option>
-                  <Option value="2018-2019">2018-2019</Option>                  
-                </Select>
-              </Form.Item>
               
               <Form.Item
-                label="学号"
+                label="密码"
               >
-                {getFieldDecorator('account', {
+                {getFieldDecorator('password', {
                   rules: [
                     { max: 12, message: "最大长度为12位字符" },
                     {
@@ -235,83 +212,11 @@ class AddScore extends Component {
                   ],
                 })(
                   <Input 
-                    onChange = { (e) => this.handleAddScore(e, "account") }                    
+                    onChange = { (e) => this.handleAddScore(e, "password") }                    
                   />
                 )}
               </Form.Item>
-              <Form.Item
-                label="学院"
-              >
-                {getFieldDecorator('college', {
-                  rules: [
-                    { max: 12, message: "最大长度为12位字符" },
-                    {
-                      required: true,
-                      whitespace: true,
-                      message: "请输入学院"
-                    }
-                  ],
-                })(
-                  <Input 
-                  onChange = { (e) => this.handleAddScore(e, "college") }                    
-                  />
-                )}
-              </Form.Item>
-              <Form.Item
-                label="专业"
-              >
-                {getFieldDecorator('profession', {
-                  rules: [
-                    { max: 12, message: "最大长度为12位字符" },
-                    {
-                      required: true,
-                      whitespace: true,
-                      message: "请输入专业"
-                    }
-                  ],
-                })(
-                  <Input 
-                  onChange = { (e) => this.handleAddScore(e, "profession") }                    
-                  />
-                )}
-              </Form.Item>
-
-              <Form.Item
-                label="专业综合成绩"
-              >
-                {getFieldDecorator('profession_score', {
-                  rules: [
-                    { max: 12, message: "最大长度为12位字符" },
-                    {
-                      required: true,
-                      whitespace: true,
-                      message: "请输入专业综合成绩"
-                    }
-                  ],
-                })(
-                  <Input 
-                  onChange = { (e) => this.handleAddScore(e, "profession_score") }                                      
-                  />
-                )}
-              </Form.Item>
-              <Form.Item
-                label="获奖成绩分数"
-              >
-                {getFieldDecorator('award_score', {
-                  rules: [
-                    { max: 12, message: "最大长度为12位字符" },
-                    {
-                      required: true,
-                      whitespace: true,
-                      message: "请输入获奖成绩得分"
-                    }
-                  ],
-                })(
-                  <Input 
-                  onChange = { (e) => this.handleAddScore(e, "award_score") }                   
-                  />
-                )}
-              </Form.Item>
+              
               <Form.Item {...tailFormItemLayout}>
                 <Button type="primary" htmlType="submit">添加</Button>
               </Form.Item>
@@ -324,4 +229,4 @@ class AddScore extends Component {
   }
 }
 
-export default Form.create()(AddScore);
+export default Form.create()(AddTeacher);
