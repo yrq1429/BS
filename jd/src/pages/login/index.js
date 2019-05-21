@@ -11,7 +11,7 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      rememberPassword: false, // 是否记住密码
+      rememberPassword: true, // 是否记住密码
       loginData: {
         account: '',
         password: ''
@@ -19,6 +19,24 @@ class Login extends React.Component {
     };
   }
 
+  getCookie = (sName) =>{
+    var aCookie = document.cookie.split("; ");
+    for (var i=0; i < aCookie.length; i++)
+    {
+    var aCrumb = aCookie[i].split("=");
+    if (sName == aCrumb[0])
+    return unescape(aCrumb[1]);
+    }
+    return null;
+  }
+  componentDidMount() {
+    const { data } = this.state;
+    console.log(this.getCookie("account"));
+    var num = this.getCookie("account")
+    if (num != "") {
+      this.props.history.push("/home")
+    }
+  }
 
   // 用户提交登录
   onSubmit() {
