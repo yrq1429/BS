@@ -34,7 +34,8 @@ class AddScore extends Component {
         profession_score: '',
         award_score: '',
         date: "2015-2016",
-        class: ""
+        class: "",
+        teacher_id: "t1"
       }
     }
   }
@@ -129,6 +130,17 @@ class AddScore extends Component {
     })    
   }
 
+  handleChangeTeacher = (value) => {
+    const { score } = this.state;
+    console.log(value)
+    score.teacher_id = value;
+    this.setState({
+      score
+    }, () => {
+      console.log(score.date.key)
+    })   
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const RadioGroup = Radio.Group;
@@ -220,7 +232,20 @@ class AddScore extends Component {
                   <Option value="2018-2019">2018-2019</Option>                  
                 </Select>
               </Form.Item>
-              
+              <Form.Item
+                label="教师"
+              >
+                <Select value={this.state.score.teacher_id} style={{ width: 350 }} 
+                  onChange={this.handleChangeTeacher}>
+                  <Option value="t1">t1</Option>
+                  <Option value="t2">t2</Option>
+                  <Option value="t3">t3</Option>
+                  <Option value="t4">t4</Option>
+                  <Option value="t5">t5</Option>
+                  <Option value="t6">t6</Option>
+                  <Option value="t7">t7</Option>                 
+                </Select>
+              </Form.Item>
               <Form.Item
                 label="学号"
               >

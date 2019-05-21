@@ -40,9 +40,10 @@ app.post('/login',function (req,res) {
       } else{
           // console.log(result[0].username)
           const cookieData = {"account":result[0].account,"username":result[0].username,"password":result[0].password};
-          res.cookie("account",result[0].account,{maxAge:1000*60*60});
+          res.cookie("account",result[0].account,{maxAge:1000*60*60*24});
           // res.cookie("username",base64.b64encode(result[0].username.encode('utf-8')),{maxAge:1000*60*60}); 
-          res.cookie("password",result[0].password,{maxAge:1000*60*60});
+          res.cookie("password",result[0].password,{maxAge:1000*60*60*24});
+          res.cookie("teacher_id",result[0].teacher_id,{maxAge:1000*60*60*24});          
           // console.log({"account":result[0].account,"username":result[0].username,"password":result[0].password})
           res.send({
             code: 10000,
@@ -88,13 +89,18 @@ app.post('/add', (req, res) => {
   var  profession=req.body.profession;
   var  profession_score=req.body.profession_score;
   var  award_score=req.body.award_score;
-  var ADD_SCORE = "insert into score(username,class,date, account, college, prefession, prefession_score, award_score) values(?,?,?,?,?,?,?,?)";
-  var params = [username,className,date, account, college, profession, profession_score, award_score];
+  var  teacher_id=req.body.teacher_id;  
+  var ADD_SCORE = "insert into score(username,class,date, account, college, prefession, prefession_score, award_score, teacher_id) values(?,?,?,?,?,?,?,?,?)";
+  var params = [username,className,date, account, college, profession, profession_score, award_score,teacher_id];
   console.log(params)
   connection.query(ADD_SCORE, params, function(error, result){
     if(error)
     {
       console.log(error.message);
+      res.json({
+        code: 10004,
+        msg: "添加失败"
+      })
     }else{
       console.log(result);
       res.json({
@@ -117,7 +123,61 @@ app.post('/getall', (req, res) => {
     if (err){
       console.log(err)
     }else{
-      console.log(results)
+      // console.log(results)
+      var allPage = parseInt(results[0][0].total)/10;
+      var pageStr = allPage.toString();
+      if (pageStr.indexOf('.')>0) {
+        allPage = parseInt(pageStr.split('.')[0]) + 1; 
+      }                          
+      res.json({
+        code: 10000,
+        msg: "操作成功",
+        data: results[1],
+        total: allPage,
+        page: page,
+        limit: limit
+      })
+   }
+  })    
+})
+
+// 查询奖学金名单
+app.post('/getallaward', (req, res) => {
+  var college = req.body.college;
+  var date = req.body.date;
+  var params = [college, date];
+  var sql = 'SELECT * FROM award where college = ? and date = ?'; 
+  console.log(sql);
+  connection.query(sql, params, function (err, results) {
+    if (err){
+      console.log(err)
+    }else{                         
+      res.json({
+        code: 10000,
+        msg: "操作成功",
+        data: results,
+        // total: allPage,
+        // page: page,
+        // limit: limit
+      })
+   }
+  })    
+})
+
+
+// 查询教师所带的班级
+app.post('/getByOwn', (req, res) => {
+  var page = req.body.page;
+  var limit = req.body.limit;
+  var id = req.body.id;
+  var start = (page - 1)*limit;
+  var sql = 'SELECT COUNT(*) as total FROM score where teacher_id = ?; SELECT * FROM score where teacher_id = ? limit ' + start + ','+(10*page); 
+  var params = [id,id];
+  console.log(sql);
+  connection.query(sql, params, function (err, results) {
+    if (err){
+      console.log(err)
+    }else{
       var allPage = parseInt(results[0][0].total)/10;
       var pageStr = allPage.toString();
       if (pageStr.indexOf('.')>0) {
@@ -139,15 +199,15 @@ app.post('/getall', (req, res) => {
 app.post('/getallteacher', (req, res) => {
   var page = req.body.page;
   var limit = req.body.limit;
-  console.log(page, limit)
+  // console.log(page, limit)
   var start = (page - 1)*limit;
   var sql = 'SELECT COUNT(*) as total FROM user; SELECT * FROM user where type = "teacher" limit ' + start + ','+(10*page); 
-  console.log(sql);
+  // console.log(sql);
   connection.query(sql, function (err, results) {
     if (err){
-      console.log(err)
+      // console.log(err)
     }else{
-      console.log(results)
+      // console.log(results)
       var allPage = parseInt(results[0][0].total)/10;
       var pageStr = allPage.toString();
       if (pageStr.indexOf('.')>0) {
@@ -173,7 +233,7 @@ app.post('/getone', (req, res) => {
     if (err) {
       console.log("查询失败")
     }  else {
-      console.log(result)
+      // console.log(result)
       if (result.length == 0) {
         res.send({
           code: 10004,
@@ -344,6 +404,97 @@ app.post('/addteacher', (req, res) => {
       })
     }
   });
+})
+
+// 奖学金评定接口
+app.post('/setaward', (req, res) => {
+  var  date = "2015-2016"
+  var  college = "软件学院"
+  var SET_AWARD = "SELECT COUNT(*) as total FROM score where date = ? and college = ? ;select id, username, account, class,college, prefession, prefession_score,award_score,date,sum(prefession_score)+sum(award_score) as sumscore FROM `score` where date = ? and college = ?group by id order by sumscore desc";
+  var params = [date,college,date,college];
+  connection.query(SET_AWARD, params, function(error, result){
+    if(error)
+    {
+      console.log(error.message);
+    }else{
+      console.log(result);
+      res.json({
+        code: 10000,
+        msg: "添加成功",
+        data: result[1],
+        total: result[0][0]
+      })
+    }
+  });
+})
+
+// 
+app.post('/setawardfinall', (req, res) => {
+  console.log(req.body)
+  for (let i = 0; i < req.body.length; i++) {
+    var sql = "insert into award(id,account,username,class,college, prefession, prefession_score, award_score, award_type,date,sumscore) values (?,?,?,?,?,?,?,?,?,?,?)";
+    var id = req.body[i].id;
+    var username = req.body[i].username;
+    var account = req.body[i].account;
+    var college = req.body[i].college;    
+    var classa = req.body[i].class;
+    var prefession = req.body[i].prefession;
+    var prefession_score = req.body[i].prefession_score;
+    var award_score = req.body[i].award_score;
+    var sumscore = req.body[i].sumscore;
+    var date = req.body[i].date;
+    var award_type = req.body[i].award_type;    
+    var params = [id,account,username, classa,college, prefession, prefession_score, award_score,award_type,date, sumscore];
+    connection.query(sql,params, function(error, result){
+      if(error)
+        {
+          try {
+            res.json({
+              code: 10004,
+              msg:"插入失败"
+            })
+          } catch (error) {
+            console.log(error)
+          }
+        }else{
+          if (result.length !== 0) {
+            res.json({
+              code: 10000,
+              msg:"插入成功"
+            })
+          }
+        }
+    });
+  }
+})
+
+//
+app.post('/getaward', (req, res) => {
+    var college = req.body.college;
+    var date = req.body.date;
+    console.log(college, date)
+    var sql = "select * from award where college = ? and date = ?";
+    var params = [college, date]
+    connection.query(sql,params, function(error, result){
+      if (error) {
+        try {
+          res.json({
+            code: 10004,
+            msg:"查看失败"
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      } else {
+        console.log(result);
+        res.json({
+          code: 10000,
+          msg: "查找成功",
+          data: result
+        })
+      }
+        
+    });
 })
 
 

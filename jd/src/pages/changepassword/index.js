@@ -99,7 +99,8 @@ class ChangePassword extends Component {
         return;
       } else {
         if (old != data.oldpassword) {
-          alert("旧密码输入错误")
+          // alert("旧密码输入错误");
+          message.info("请输入正确的旧的密码")
         }else {
           axios.post('/changepwd', qs.stringify(this.state.data))
             .then(res => {

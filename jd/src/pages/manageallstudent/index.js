@@ -23,7 +23,7 @@ const RadioGroup = Radio.Group;
 const { Content } = Layout;
 const { Option } = Select;
 const FormItem = Form.Item;
-class ManageStudent extends Component {
+class ManageAllStudent extends Component {
 
   constructor (props) {
     super (props);
@@ -88,7 +88,7 @@ class ManageStudent extends Component {
 
   // 请求数据
   getData = (data) => {
-    axios.post('/getByOwn', qs.stringify(data))
+    axios.post('/getall', qs.stringify(data))
       .then(res => {
         this.setState({
           data: res.data.data,
@@ -409,8 +409,8 @@ class ManageStudent extends Component {
               </div>
               <div className="options">
                 管理成绩：<RadioGroup name="radiogroup" defaultValue="ownclass">
-                          <Radio value="ownclass">所带班级成绩</Radio>
-                          <Radio value="allclass" disabled>全部成绩</Radio>
+                          <Radio value="ownclass" disabled>所带班级成绩</Radio>
+                          <Radio value="allclass">全部成绩</Radio>
                         </RadioGroup>
               </div>
               {
@@ -425,4 +425,4 @@ class ManageStudent extends Component {
   }
 }
 
-export default Form.create()(ManageStudent);
+export default Form.create()(ManageAllStudent);

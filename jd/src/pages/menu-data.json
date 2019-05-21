@@ -52,16 +52,6 @@
     },
     {
       "id": 6,
-      "title": "奖学金设定",
-      "icon": "coffee",
-      "url": "/awardsetting",
-      "parent": 2,
-      "desc": "奖学金设定",
-      "sorts": 0,
-      "conditions": 1
-    },
-    {
-      "id": 7,
       "title": "修改密码",
       "icon": "appstore",
       "url": "/changepassword",
@@ -102,6 +92,7 @@
       "sorts": 0,
       "conditions": 1
     },
+    
     {
       "id": 4,
       "title": "管理教师",
@@ -109,6 +100,26 @@
       "url": "/manageteacher",
       "parent": 2,
       "desc": "管理教师",
+      "sorts": 0,
+      "conditions": 1
+    },
+    {
+      "id": 5,
+      "title": "奖学金设定",
+      "icon": "coffee",
+      "url": "/awardsetting",
+      "parent": 2,
+      "desc": "奖学金设定",
+      "sorts": 0,
+      "conditions": 1
+    },
+    {
+      "id": 6,
+      "title": "管理所有学生成绩",
+      "icon": "team",
+      "url": "/manageallstudent",
+      "parent": 2,
+      "desc": "管理学生成绩",
       "sorts": 0,
       "conditions": 1
     }

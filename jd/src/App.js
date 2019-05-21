@@ -8,6 +8,7 @@ import AddScore from './pages/addscore'
 import ChangePassword from './pages/changepassword';
 import AwardSetting from './pages/awardsetting';
 import ManageStudent from './pages/managestudent';
+import ManageAllStudent from './pages/manageallstudent';
 import ManageTeacher from './pages/manageteacher';
 import AddTeacher from './pages/addteacher';
 import axios from 'axios';
@@ -30,7 +31,8 @@ class App extends Component {
           <Route exact path='/system/awardsetting' component={ AwardSetting }></Route>   
           <Route exact path='/system/managestudent' component={ ManageStudent }></Route> 
           <Route exact path='/system/manageTeacher' component={ ManageTeacher }></Route>  
-          <Route exact path='/system/addTeacher' component={ AddTeacher }></Route>                                                                                                                                                              
+          <Route exact path='/system/addTeacher' component={ AddTeacher }></Route> 
+          <Route exact path='/system/manageallstudent' component={ ManageAllStudent }></Route>                                                                                                                                                                                                                                                                                                                                     
         </Fragment>
       </Router>
     );
