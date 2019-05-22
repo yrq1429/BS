@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route,Redirect,Switch } from "react-router-dom";
 import { GlobalStyle } from "./style";
 import Home from "./pages/home";
 import Login from "./pages/login";

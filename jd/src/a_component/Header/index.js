@@ -3,7 +3,8 @@ import React from "react";
 import P from "prop-types";
 import { Link } from "react-router-dom";
 import { Layout, Icon, Tooltip, Menu, Dropdown } from "antd";
-
+import { BrowserRouter as Router, Route,Redirect,Switch } from "react-router-dom";
+import {createHashHistory} from 'history';
 import "./index.scss";
 import axios from "axios";
 import qs from 'qs';
@@ -56,16 +57,25 @@ export default class Com extends React.PureComponent {
   toggle = () => {
     this.props.onToggle();
   };
-
+  delAllCookie = () =>{    
+    var myDate=new Date();    
+    myDate.setTime(-1000);//设置时间    
+    var data=document.cookie;    
+    var dataArray=data.split("; ");    
+    for(var i=0;i<dataArray.length;i++){    
+         var varName=dataArray[i].split("=");    
+         document.cookie=varName[0]+"=''; expires="+myDate.toGMTString();    
+    }    
+                  
+  }   
 
   /**
    * 退出登录
    * **/
   onMenuClick = e => {
-    if (e.key === "logout") {
-      // 退出按钮被点击
-      this.props.onLogout();
-    }
+    this.delAllCookie()
+    console.log("aaa");
+    this.props.handleOut();
   };
 
   render() {

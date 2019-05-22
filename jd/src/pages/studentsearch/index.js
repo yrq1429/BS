@@ -128,7 +128,9 @@ class StudentSearch extends Component {
       account: newaccount
     })
   }
-
+  handleLogout = () => {
+    this.props.history.push('/login')
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -143,6 +145,7 @@ class StudentSearch extends Component {
         <Layout>
           <Header
             collapsed={this.state.collapsed}
+            handleOut = { this.handleLogout }
           />
           <div className="menus">
             <Breadcrumb separator="/">

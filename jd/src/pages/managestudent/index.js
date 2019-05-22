@@ -380,7 +380,9 @@ class ManageStudent extends Component {
   }
 
 
-
+  handleLogout = () => {
+    this.props.history.push('/login')
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
     const { dataSource, columns } = this.state;
@@ -395,6 +397,7 @@ class ManageStudent extends Component {
         <Layout>
           <Header
             collapsed={this.state.collapsed}
+            handleOut = { this.handleLogout }
           />
           <div className="menus">
             <Breadcrumb separator="/">

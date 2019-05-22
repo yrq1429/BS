@@ -29,14 +29,14 @@ class Login extends React.Component {
     }
     return null;
   }
-  componentDidMount() {
-    const { data } = this.state;
-    console.log(this.getCookie("account"));
-    var num = this.getCookie("account")
-    if (num != "") {
-      this.props.history.push("/home")
-    }
-  }
+  // componentDidMount() {
+  //   const { data } = this.state;
+  //   console.log(this.getCookie("account"));
+  //   var num = this.getCookie("account")
+  //   if (num != "") {
+  //     this.props.history.push("/home")
+  //   }
+  // }
 
   // 用户提交登录
   onSubmit() {

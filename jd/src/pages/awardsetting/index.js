@@ -206,7 +206,9 @@ class AwardSetting extends Component {
       </div>
     )
   }
-
+  handleLogout = () => {
+    this.props.history.push('/login')
+  }
   handleToAward = () => {
     const { showTable } = this.state;
     this.setState({
@@ -270,6 +272,7 @@ class AwardSetting extends Component {
         <Layout>
           <Header
             collapsed={this.state.collapsed}
+            handleOut = { this.handleLogout }
           />
           <div className="menus">
             <Breadcrumb>

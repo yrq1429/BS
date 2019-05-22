@@ -46,20 +46,24 @@ class Home extends Component {
     }
     return null;
     }
-  componentDidMount() {
-      console.log(this.getCookie("account"));
-      var num = this.getCookie("account")
-      if (num != "root") {
-        this.setState({
-          userInfo: this.props.location.query
-        })
-      } else {
-        this.setState({
-          userInfo: this.props.location.query,
-          menus: menuData.rootMenu
-        })
-      }
+  // componentDidMount() {
+  //     console.log(this.getCookie("account"));
+  //     var num = this.getCookie("account")
+  //     if (num != "root") {
+  //       this.setState({
+  //         userInfo: this.props.location.query
+  //       })
+  //     } else {
+  //       this.setState({
+  //         userInfo: this.props.location.query,
+  //         menus: menuData.rootMenu
+  //       })
+  //     }
       
+  // }
+
+  handleLogout = () => {
+    this.props.history.push('/login')
   }
 
   render() {
@@ -75,6 +79,7 @@ class Home extends Component {
           <Header
             collapsed={this.state.collapsed}
             data = { this.state.userInfo }
+            handleOut = { this.handleLogout }
           />
           <div className="menus">
             <Breadcrumb>
